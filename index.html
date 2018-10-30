@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div>
+        <h1 style="font-family: Arial, Helvetica, sans-serif">Weed Detection</h1>
+        <button style="font-weight: 700; font-size: 1.2em; cursor: pointer; padding: 10px 15px; color: #000; background-color: #fff; border: 3px solid #000; border-radius: 10px;" onclick="">Start Weed Detection Process</button>
+    </div>
+    <h1 style="font-family: Arial, Helvetica, sans-serif">Farming</h1>
+    <table>
+        <tr>
+            <td><label style="padding: 0 40px 0 0; font-size: 1.1em; font-weight: 600; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">Field Width: </label></td>
+            <td><input style="padding: 5px 10px; border: 2px dashed #000; border-radius: 10px;" type="number" name="FieldWidth" id="FieldWidth"></td>
+        </tr>
+        <tr>
+            <td><label style="padding: 0 40px 0 0; font-size: 1.1em; font-weight: 600; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">Field Length: </label></td>
+            <td><input style="padding: 5px 10px; border: 2px dashed #000; border-radius: 10px;" type="number" name="FieldLength" id="FieldLength"></td>
+        </tr>
+        <tr>
+            <td><label style="padding: 0 40px 0 0; font-size: 1.1em; font-weight: 600; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">Gap Between Seeds: </label></td>
+            <td><input style="padding: 5px 10px; border: 2px dashed #000; border-radius: 10px;" type="number" name="GapBetweenSeeds" id="GapBetweenSeeds"></td>
+        </tr>
+        <tr>
+            <td colspan="2"><button style="font-weight: 700; font-size: 1.2em; cursor: pointer; padding: 10px 15px; margin: 30px 5px 10px; color: #000; background-color: #fff; border: 3px solid #000; border-radius: 10px;" onclick="giveData()">Update</button></td>
+            <td colspan="2"><button style="font-weight: 700; font-size: 1.2em; cursor: pointer; padding: 10px 15px; margin: 30px 5px 10px; color: #000; background-color: #fff; border: 3px solid #000; border-radius: 10px;" onclick="stopPlanting()">Stop</button></td>
+        </tr>
+    </table>
+    <h1 style="font-family: Arial, Helvetica, sans-serif">Manually Control the robot</h1>
+    <p>Robot:</p>
+    <button onclick="orderTo('forward', 0)">Front</button>
+    <button onclick="orderTo('backward', 0)">Back</button>
+    <button onclick="orderTo('toRight', 0)">Right</button>
+    <button onclick="orderTo('toLeft', 0)">Left</button>
+    <button onclick="orderTo('rotate', [90, 1])">Rotate Right</button>
+    <button onclick="orderTo('rotate', [90, 0])">Rotate Left</button>
+    <button onclick="orderTo('stop', 0)">Stop</button>
+    <br>
+    <p>Drill:</p>
+    <button onclick="orderTo('drillStepUp', 0)">Step Up</button>
+    <button onclick="orderTo('drillStepDown', 0)">Step Down</button>
+    <button onclick="orderTo('drillClockWise', 0)">Rotate CW</button>
+    <button onclick="orderTo('drillAntiClockWise', 0)">Rotate CCW</button>
+    <button onclick="orderTo('drillStop', 0)">Stop</button>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var fullURL = 'http://' + document.domain + ':' + location.port + '/';
+        console.log(fullURL);
+        var socket = io.connect(fullURL);
+        socket.on('connect', function() {
+            socket.emit('event', {data: "Up"});
+        });
+        socket.on('disconnect', function() {
+            alert("Disconnected")
+        });
+        var orderTo = function(order, data) {
+            socket.emit('order', {'order': order, 'data': data});
+        }
+        var givingData = function(data) {
+            socket.emit('givingData', {'data': data});
+        }
+
+        function giveData() {
+            let FieldWidth      = document.getElementById('FieldWidth').value,
+                FieldLength     = document.getElementById('FieldLength').value,
+                GapBetweenSeeds = document.getElementById('GapBetweenSeeds').value;
+            data = [FieldWidth, FieldLength, GapBetweenSeeds];
+            givingData(data);
+        }
+        function stopPlanting() {
+            let FieldWidth      = null,
+                FieldLength     = null,
+                GapBetweenSeeds = null;
+            data = [FieldWidth, FieldLength, GapBetweenSeeds];
+            givingData(data);
+        }
+    </script>
+</body>
+</html>
