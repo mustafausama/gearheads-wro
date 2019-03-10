@@ -45,9 +45,9 @@ us1i = 19
 us1o = 21
 us2i = 23
 us2o = 24
-us3i = 26
-us3o = 28
-
+m7 = 29
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(m7, GPIO.OUT)
 USsList = [[19, 21], [23, 24]]
 
 Movement = control.MovementControl(m1, m2, m3, m4)
@@ -73,10 +73,11 @@ userData = {
 	"GapBetweenSeeds": None
 }
 
+firstSid = None
+
 sio = socketio.AsyncServer()
 app = web.Application()
 sio.attach(app)
-
 async def index(request):
 	"""Serve the client-side application."""
 	with open('index.html') as f:
@@ -84,8 +85,11 @@ async def index(request):
 
 @sio.on('connect')
 def connect(sid, environ):
-	print('Connected ', sid)
-	print('=============================')
+    global firstSid
+    print('Connected ', sid)
+    if(firstSid == None):
+        firstSid = sid
+    print('=============================')
 
 @sio.on('disconnect')
 def disconnect(sid):
@@ -99,6 +103,8 @@ async def message(sid, data):
         globals()[data['order']](data['data'][0], data['data'][1], EncoderData)
     else:
         globals()[data['order']]()
+    if(data['order'] == 'drillStop'):
+        GPIO.output(m7, GPIO.LOW)
     await sio.emit('reply', room=sid)
 
 @sio.on('givingData')
@@ -109,14 +115,29 @@ async def givingData(sid, data):
 	userData['GapBetweenSeeds'] = int(data['data'][2]) if data['data'][1] != None else 0
 	time.sleep(1)
 
+@sio.on('weeds')
+async def weeds(sid, data):
+    print('Remove Weeds')
+    RemoveWeeds()
+
+@sio.on('waterexceeded')
+async def waterexceeded(sid, data):
+    print('Water Exceeded on: ')
+    print(data)
+    await sio.emit('waterexceeded', data)
+
+
 app.router.add_static('/socket.io', 'socket.io')
 app.router.add_get('/', index)
 
 def runWebApp(app):
-	try :
+	try:
 		web.run_app(app)
 	except KeyboardInterrupt:
 		return
+
+def RemoveWeeds():
+    GPIO.output(m7, GPIO.HIGH)
 
 def mainProg():
     while True:
@@ -162,10 +183,16 @@ def mainProg():
             userData["GapBetweenSeeds"] == None
         time.sleep(1)
 #00:16:53:41:1E:FF
-try :
-	mainApp = threading.Thread(target=mainProg, args=[])
-	mainApp.start()
-	runWebApp(app)
+try:
+    """while True:
+        Movement.forward()
+        time.sleep(2)
+        Movement.stop()
+        time.sleep(2)"""
+    mainApp = threading.Thread(target=mainProg, args=[])
+    mainApp.start()
+    runWebApp(app)
+
 except KeyboardInterrupt:
 	GPIO.cleanup()
 	exit()

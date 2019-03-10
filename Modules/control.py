@@ -6,6 +6,8 @@ class MovementControl(threading.Thread):
 	# Pulses that control the motors' rotation direction as servos
 	__clockwisePulse = 6
 	__antiClockwisePulse = 9
+	def motorHa(self):
+		self.motor1.ChangeDutyCycle(self.__clockwisePulse)
 
 	# Initialize the motors and create class attribute for every motor
 	def __init__(self, motorRightFront, motorRightBack, motorLeftFront, motorLeftBack):

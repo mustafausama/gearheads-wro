@@ -1,5 +1,5 @@
 {
-  "sftp://192.168.43.228:22@pi": {
+  "sftp://192.168.137.16:22@pi": {
     "var": {
       "projects": {
         "WRO": {
@@ -17,67 +17,18 @@
           },
           "main-noEV3.py": {
             "type": "-",
-            "size": 5355,
-            "lmtime": 1539206095301,
+            "size": 6003,
+            "lmtime": 1547688250432,
             "modified": false
           },
           ".git": {},
           "main-py.py": {
             "type": "-",
             "size": 4906,
-            "lmtime": 1539195794571,
+            "lmtime": 0,
             "modified": false
           },
-          "socket.io": {
-            "socket.io.slim.js.map": {
-              "type": "-",
-              "size": 349217,
-              "lmtime": 0,
-              "modified": false
-            },
-            "socket.io.js.map": {
-              "type": "-",
-              "size": 406701,
-              "lmtime": 0,
-              "modified": false
-            },
-            "socket.io.slim.js": {
-              "type": "-",
-              "size": 53062,
-              "lmtime": 0,
-              "modified": false
-            },
-            "socket.io.dev.js": {
-              "type": "-",
-              "size": 156931,
-              "lmtime": 0,
-              "modified": false
-            },
-            "socket.io.slim.dev.js.map": {
-              "type": "-",
-              "size": 180159,
-              "lmtime": 0,
-              "modified": false
-            },
-            "socket.io.js": {
-              "type": "-",
-              "size": 62438,
-              "lmtime": 0,
-              "modified": false
-            },
-            "socket.io.slim.dev.js": {
-              "type": "-",
-              "size": 134030,
-              "lmtime": 0,
-              "modified": false
-            },
-            "socket.io.dev.js.map": {
-              "type": "-",
-              "size": 208028,
-              "lmtime": 0,
-              "modified": false
-            }
-          },
+          "socket.io": {},
           "test3.jpg": {
             "type": "-",
             "size": 2733448,
@@ -105,13 +56,13 @@
             },
             "control.py": {
               "type": "-",
-              "size": 5327,
-              "lmtime": 1539205906496,
+              "size": 5402,
+              "lmtime": 1547423104288,
               "modified": false
             },
             "sensors.pyc": {
               "type": "-",
-              "size": 2835,
+              "size": 2833,
               "lmtime": 0,
               "modified": false
             },
@@ -131,7 +82,13 @@
             "dht11.py": {
               "type": "-",
               "size": 5969,
-              "lmtime": 1521888363107,
+              "lmtime": 0,
+              "modified": false
+            },
+            "control.pyc": {
+              "type": "-",
+              "size": 7320,
+              "lmtime": 0,
               "modified": false
             },
             "sensors.py": {
@@ -149,8 +106,8 @@
           },
           "index.html": {
             "type": "-",
-            "size": 4639,
-            "lmtime": 1539202755893,
+            "size": 7934,
+            "lmtime": 1547683150563,
             "modified": false
           },
           "templates": {},

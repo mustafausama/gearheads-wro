@@ -5,6 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Page Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body > * {
+            margin-left: 20px;
+        }
+    </style>
 </head>
 <body>
     <div>
@@ -32,20 +40,40 @@
     </table>
     <h1 style="font-family: Arial, Helvetica, sans-serif">Manually Control the robot</h1>
     <p>Robot:</p>
-    <button onclick="orderTo('forward', 0)">Front</button>
-    <button onclick="orderTo('backward', 0)">Back</button>
-    <button onclick="orderTo('toRight', 0)">Right</button>
-    <button onclick="orderTo('toLeft', 0)">Left</button>
-    <button onclick="orderTo('rotate', [90, 1])">Rotate Right</button>
-    <button onclick="orderTo('rotate', [90, 0])">Rotate Left</button>
-    <button onclick="orderTo('stop', 0)">Stop</button>
-    <br>
+    <section style="display: block; width: 400px;">
+        <div style="position: relative;">
+            <button style="padding: 20px; font-size: 1.2em; font-weight: 900; border: 2px solid gray; border-radius: 10px; display: block; margin: 40px auto;" onclick="orderTo('forward', 0)">Front</button>
+        </div>
+        <div style="position: relative; display: block;">
+            <button style="padding: 20px; font-size: 1.2em; font-weight: 900; border: 2px solid gray; border-radius: 10px; display: inline-block; float: right;" onclick="orderTo('toRight', 0)">Right</button>
+            <button style="padding: 20px; font-size: 1.2em; font-weight: 900; border: 2px solid gray; border-radius: 10px; display: inline-block; margin-left: 75px" onclick="orderTo('stop', 0)">Stop</button>
+            <button style="padding: 20px; font-size: 1.2em; font-weight: 900; border: 2px solid gray; border-radius: 10px; display: inline-block; float: left;" onclick="orderTo('toLeft', 0)">Left</button>
+        </div>
+        <div style="clear: both;"></div>
+        <div style="position: relative;">
+            <button style="padding: 20px; font-size: 1.2em; font-weight: 900; border: 2px solid gray; border-radius: 10px; display: block; margin: 40px auto" onclick="orderTo('backward', 0)">Back</button>
+        </div>
+    </section>
+    <section style="display: block; width: 400px;">
+        <button style="padding: 20px; font-size: 1.2em; font-weight: 900; border: 2px solid gray; border-radius: 10px; display: inline-block; float: left;" onclick="orderTo('rotate', [90, 0])">Rotate Left</button>
+        <button style="margin-left: 50px; padding: 20px; font-size: 1.2em; font-weight: 900; border: 2px solid gray; border-radius: 10px; display: inline-block; float: right;" onclick="orderTo('rotate', [90, 1])">Rotate Right</button>
+        <div style="clear: both;"></div>        
+    </section>
     <p>Drill:</p>
-    <button onclick="orderTo('drillStepUp', 0)">Step Up</button>
-    <button onclick="orderTo('drillStepDown', 0)">Step Down</button>
-    <button onclick="orderTo('drillClockWise', 0)">Rotate CW</button>
-    <button onclick="orderTo('drillAntiClockWise', 0)">Rotate CCW</button>
-    <button onclick="orderTo('drillStop', 0)">Stop</button>
+    <section style="display: block; width: 400px;">
+        <section style="display: inline-block; width: 200px; float: left;">
+            <button style="padding: 20px; font-size: 1.2em; font-weight: 900; border: 2px solid gray; border-radius: 10px; display: block; margin: 30px auto" onclick="orderTo('drillStepUp', 0)">Step Up</button>
+            <button style="padding: 20px; font-size: 1.2em; font-weight: 900; border: 2px solid gray; border-radius: 10px; display: block; margin: 30px auto" onclick="orderTo('drillStepDown', 0)">Step Down</button>
+        </section>
+        <section style="display: inline-block; width: 200px; float: right;">
+            <button style="padding: 20px; font-size: 1.2em; font-weight: 900; border: 2px solid gray; border-radius: 10px; display: block; margin: 30px auto" onclick="orderTo('drillClockWise', 0)">Rotate CW</button>
+            <button style="padding: 20px; font-size: 1.2em; font-weight: 900; border: 2px solid gray; border-radius: 10px; display: block; margin: 30px auto" onclick="orderTo('drillAntiClockWise', 0)">Rotate CCW</button>
+        </section>
+        <div style="clear: both;"></div>
+        <button style="padding: 20px; font-size: 1.2em; font-weight: 900; border: 2px solid gray; border-radius: 10px; display: inline-block; margin: 30px auto" style="clear: both;" onclick="orderTo('drillStop', 0)">Stop</button>
+        <button style="padding: 20px; font-size: 1.2em; font-weight: 900; border: 2px solid gray; border-radius: 10px; display: inline-block; margin: 30px auto" style="clear: both;" onclick="weeds(0)">Weeds</button>
+    </section>
+    <div style="clear: both;"></div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -58,11 +86,23 @@
         socket.on('disconnect', function() {
             alert("Disconnected")
         });
+        socket.on('waterexceeded', function(data) {
+            var notification = new Notification('Notification',
+            {
+                title: 'Hello'
+            });
+            console.log('Water Exceeded on: ' + data);
+            alert('Water Exceeded on: ' + data);
+        });
         var orderTo = function(order, data) {
             socket.emit('order', {'order': order, 'data': data});
         }
         var givingData = function(data) {
             socket.emit('givingData', {'data': data});
+        }
+        
+        var weeds = function(data) {
+            socket.emit('weeds', {'data': data});
         }
 
         function giveData() {
